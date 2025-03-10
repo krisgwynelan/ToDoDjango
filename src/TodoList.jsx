@@ -74,9 +74,10 @@ function TodoList() {
         {filteredTasks.map((task, index) => (
           <li key={index} style={{ color: task.completed ? "green" : "black" }}>
             <div>
-              <strong>{task.title}</strong>
-              <p>{task.description}</p>
+              <strong>Title: {task.title}</strong>  
+              <p>Description: {task.description}</p>  
               <small>Due: {task.dueDate} {task.dueTime}</small>
+
             </div>
             <div className="task-actions">
               {!task.completed && (
