@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+const API_URL = "http://127.0.0.1:8000/todoapp/api/tasks/";
 
 function TodoList() {
   const [tasks, setTasks] = useState([]);
@@ -10,17 +13,45 @@ function TodoList() {
   const [editTaskIndex, setEditTaskIndex] = useState(null);
   const [filter, setFilter] = useState("all");
 
+  // Fetch tasks from the backend on initial load
+  useEffect(() => {
+    axios.get(API_URL)
+      .then((response) => {
+        setTasks(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching tasks:", error);
+      });
+  }, []);
+
+  // Add or update a task
   const addTask = () => {
     if (taskTitle.trim() !== "" && taskDescription.trim() !== "" && dueDate !== "" && dueTime !== "") {
+      const taskData = {
+        title: taskTitle,
+        description: taskDescription,
+        due_date: dueDate,
+        due_time: dueTime,
+        completed: false,
+      };
+
       if (editTaskIndex !== null) {
-        // Editing existing task
-        const updatedTasks = [...tasks];
-        updatedTasks[editTaskIndex] = { title: taskTitle, description: taskDescription, dueDate, dueTime, completed: false };
-        setTasks(updatedTasks);
-        setEditTaskIndex(null);
+        // Edit existing task (PUT)
+        axios.put(`${API_URL}${tasks[editTaskIndex].id}/`, taskData)
+          .then((response) => {
+            const updatedTasks = [...tasks];
+            updatedTasks[editTaskIndex] = response.data;
+            setTasks(updatedTasks);
+            setEditTaskIndex(null);
+          })
+          .catch((error) => console.error("Error updating task:", error));
       } else {
-        // Adding new task
-        setTasks([...tasks, { title: taskTitle, description: taskDescription, dueDate, dueTime, completed: false }]);
+        // Add new task (POST)
+        axios.post(API_URL, taskData)
+          .then((response) => {
+            setTasks([...tasks, response.data]);
+          })
+          .catch((error) => console.error("Error adding task:", error));
       }
 
       // Reset inputs
@@ -32,29 +63,42 @@ function TodoList() {
     }
   };
 
+  // Edit a task
   const editTask = (index) => {
     setEditTaskIndex(index);
     setTaskTitle(tasks[index].title);
     setTaskDescription(tasks[index].description);
-    setDueDate(tasks[index].dueDate);
-    setDueTime(tasks[index].dueTime);
+    setDueDate(tasks[index].due_date);
+    setDueTime(tasks[index].due_time);
     setShowModal(true);
   };
 
+  // Mark task as done (PATCH)
   const markAsDone = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index].completed = true;
-    setTasks(updatedTasks);
+    const updatedTask = { ...tasks[index], completed: true };
+    axios.patch(`${API_URL}${tasks[index].id}/`, updatedTask)
+      .then((response) => {
+        const updatedTasks = [...tasks];
+        updatedTasks[index] = response.data;
+        setTasks(updatedTasks);
+      })
+      .catch((error) => console.error("Error marking task as done:", error));
   };
 
+  // Delete a task (DELETE)
   const deleteTask = (index) => {
-    setTasks(tasks.filter((_, i) => i !== index));
+    axios.delete(`${API_URL}${tasks[index].id}/`)
+      .then(() => {
+        setTasks(tasks.filter((_, i) => i !== index));
+      })
+      .catch((error) => console.error("Error deleting task:", error));
   };
 
+  // Filter tasks based on the filter state
   const filteredTasks = tasks.filter((task) => {
     if (filter === "completed") return task.completed;
     if (filter === "pending") return !task.completed;
-    return true; // Show all tasks
+    return true; 
   });
 
   return (
@@ -72,12 +116,11 @@ function TodoList() {
 
       <ul>
         {filteredTasks.map((task, index) => (
-          <li key={index} style={{ color: task.completed ? "green" : "black" }}>
+          <li key={task.id} style={{ color: task.completed ? "green" : "black" }}>
             <div>
               <strong>Title: {task.title}</strong>  
               <p>Description: {task.description}</p>  
-              <small>Due: {task.dueDate} {task.dueTime}</small>
-
+              <small>Due: {task.due_date} {task.due_time}</small>
             </div>
             <div className="task-actions">
               {!task.completed && (
