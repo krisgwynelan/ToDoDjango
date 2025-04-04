@@ -1,21 +1,42 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap");
 
 
-/* General Styles */
 body {
   font-family: "Inter", sans-serif;
-  background: #9c9898;
+  background-color: #9c9898;
   color: #000000;
   font-size: 13px;
   font-weight: bold;
   margin: 0;
   padding: 0;
   transition: background 0.3s, color 0.3s;
+
+  /* Fix for blurriness */
+  background-image: url('/src/assets/bg1.jpg');
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  transform: translateZ(0); /* Avoid Chrome's blurring issue */
 }
 
+/* Semi-transparent overlay for contrast */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Adjust opacity */
+  z-index: -1;
+}
+
+
 body.dark {
-  background: #222;
+  
   color: #fff;
+  background-image: url('/src/assets/bg.jpg');
 }
 
 .app-container {
@@ -74,6 +95,59 @@ header {
   justify-content: space-around;
   margin: 10px 0;
 }
+/* Hover effects for buttons */
+.add-task-btn:hover,
+.filters button:hover,
+.modal-buttons button:hover,
+.task-actions button:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+/* Specific hover colors */
+.add-task-btn:hover {
+  background: linear-gradient(135deg, #b4ec51, #429321);
+}
+
+.filters button:hover {
+  background: #ccc;
+}
+
+.modal-buttons .cancel-btn:hover {
+  background: #86bde5;
+}
+
+.modal-buttons .save-btn:hover {
+  background: #0056b3;
+}
+
+/* Hover effect for task items */
+li:hover {
+  background: linear-gradient(135deg, #b4ec51, #429321);
+  transform: scale(1.02);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effects for action buttons */
+.task-actions button:hover {
+  transform: scale(1.08);
+}
+
+/* Individual button hover colors */
+.done-btn:hover {
+  background: #45a049;
+}
+
+.edit-btn:hover {
+  background: #e08b42;
+}
+
+.delete-btn:hover {
+  background: #c62828;
+}
+
 
 .filters button {
   padding: 10px 120px;
@@ -132,7 +206,11 @@ li.completed {
 }
 
 .modal {
-  background:  #ffff;
+  background-color: #ece5e5;
+  background-size: cover;
+  margin-top: 150px;
+  background-position: center;
+  background-repeat: no-repeat;
   padding: 40px;
   border-radius: 12px;
   width: 700px;
@@ -144,7 +222,7 @@ li.completed {
 }
 
 body.dark .modal {
-  background: #444;
+  background: #ece5e5;
   color: white;
 }
 
@@ -159,7 +237,6 @@ body.dark .modal {
   width: 90%;
   padding: 15px;
   margin: 10px 0;
-  border: 1px solid #0b8807;
   background-color: #ddd;
   border-radius: 6px;
   font-size: 20px;

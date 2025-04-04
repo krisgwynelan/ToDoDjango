@@ -3,7 +3,10 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: rgb(197, 216, 216);
+
 }
+
 
 .logo {
   height: 6em;
