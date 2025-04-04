@@ -3,7 +3,6 @@ import axios from "axios";
 
 const API_URL = "https://tododjango-jw0w.onrender.com/todoapp/api/tasks/";
 
-
 function TodoList() {
   const [tasks, setTasks] = useState([]);
   const [taskTitle, setTaskTitle] = useState("");
