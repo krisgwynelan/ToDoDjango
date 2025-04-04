@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://krisgwynelan.github.io/ToDo-Django",
+  "homepage": "https://github.com/krisgwynelan/ToDoDjango.git",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
