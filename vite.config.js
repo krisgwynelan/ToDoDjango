@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/ToDo-Django/', // Set this to your repo name
+  base: '/ToDo-Django/', 
 });
